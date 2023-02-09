@@ -11,47 +11,47 @@ namespace eCommerce.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductdbsController : ControllerBase
+    public class BuyersController : ControllerBase
     {
-        private readonly commerceDBContext _context;
+        private readonly ecommerceContext _context;
 
-        public ProductdbsController(commerceDBContext context)
+        public BuyersController(ecommerceContext context)
         {
             _context = context;
         }
 
-        // GET: api/Productdbs
+        // GET: api/Buyers
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Productdb>>> GetProductdb()
+        public async Task<ActionResult<IEnumerable<Buyer>>> GetBuyers()
         {
-            return await _context.Productdb.ToListAsync();
+            return await _context.Buyers.ToListAsync();
         }
 
-        // GET: api/Productdbs/5
+        // GET: api/Buyers/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Productdb>> GetProductdb(int id)
+        public async Task<ActionResult<Buyer>> GetBuyer(int id)
         {
-            var productdb = await _context.Productdb.FindAsync(id);
+            var buyer = await _context.Buyers.FindAsync(id);
 
-            if (productdb == null)
+            if (buyer == null)
             {
                 return NotFound();
             }
 
-            return productdb;
+            return buyer;
         }
 
-        // PUT: api/Productdbs/5
+        // PUT: api/Buyers/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProductdb(int id, Productdb productdb)
+        public async Task<IActionResult> PutBuyer(int id, Buyer buyer)
         {
-            if (id != productdb.Id)
+            if (id != buyer.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(productdb).State = EntityState.Modified;
+            _context.Entry(buyer).State = EntityState.Modified;
 
             try
             {
@@ -59,7 +59,7 @@ namespace eCommerce.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ProductdbExists(id))
+                if (!BuyerExists(id))
                 {
                     return NotFound();
                 }
@@ -72,19 +72,19 @@ namespace eCommerce.Controllers
             return NoContent();
         }
 
-        // POST: api/Productdbs
+        // POST: api/Buyers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Productdb>> PostProductdb(Productdb productdb)
+        public async Task<ActionResult<Buyer>> PostBuyer(Buyer buyer)
         {
-            _context.Productdb.Add(productdb);
+            _context.Buyers.Add(buyer);
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
-                if (ProductdbExists(productdb.Id))
+                if (BuyerExists(buyer.Id))
                 {
                     return Conflict();
                 }
@@ -94,28 +94,28 @@ namespace eCommerce.Controllers
                 }
             }
 
-            return CreatedAtAction("GetProductdb", new { id = productdb.Id }, productdb);
+            return CreatedAtAction("GetBuyer", new { id = buyer.Id }, buyer);
         }
 
-        // DELETE: api/Productdbs/5
+        // DELETE: api/Buyers/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProductdb(int id)
+        public async Task<IActionResult> DeleteBuyer(int id)
         {
-            var productdb = await _context.Productdb.FindAsync(id);
-            if (productdb == null)
+            var buyer = await _context.Buyers.FindAsync(id);
+            if (buyer == null)
             {
                 return NotFound();
             }
 
-            _context.Productdb.Remove(productdb);
+            _context.Buyers.Remove(buyer);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool ProductdbExists(int id)
+        private bool BuyerExists(int id)
         {
-            return _context.Productdb.Any(e => e.Id == id);
+            return _context.Buyers.Any(e => e.Id == id);
         }
     }
 }

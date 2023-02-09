@@ -11,47 +11,47 @@ namespace eCommerce.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserdbsController : ControllerBase
+    public class StoresController : ControllerBase
     {
-        private readonly commerceDBContext _context;
+        private readonly ecommerceContext _context;
 
-        public UserdbsController(commerceDBContext context)
+        public StoresController(ecommerceContext context)
         {
             _context = context;
         }
 
-        // GET: api/Userdbs
+        // GET: api/Stores
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Userdb>>> GetUserdb()
+        public async Task<ActionResult<IEnumerable<Store>>> GetStores()
         {
-            return await _context.Userdb.ToListAsync();
+            return await _context.Stores.ToListAsync();
         }
 
-        // GET: api/Userdbs/5
+        // GET: api/Stores/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Userdb>> GetUserdb(int id)
+        public async Task<ActionResult<Store>> GetStore(string id)
         {
-            var userdb = await _context.Userdb.FindAsync(id);
+            var store = await _context.Stores.FindAsync(id);
 
-            if (userdb == null)
+            if (store == null)
             {
                 return NotFound();
             }
 
-            return userdb;
+            return store;
         }
 
-        // PUT: api/Userdbs/5
+        // PUT: api/Stores/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUserdb(int id, Userdb userdb)
+        public async Task<IActionResult> PutStore(string id, Store store)
         {
-            if (id != userdb.Id)
+            if (id != store.Name)
             {
                 return BadRequest();
             }
 
-            _context.Entry(userdb).State = EntityState.Modified;
+            _context.Entry(store).State = EntityState.Modified;
 
             try
             {
@@ -59,7 +59,7 @@ namespace eCommerce.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UserdbExists(id))
+                if (!StoreExists(id))
                 {
                     return NotFound();
                 }
@@ -72,19 +72,19 @@ namespace eCommerce.Controllers
             return NoContent();
         }
 
-        // POST: api/Userdbs
+        // POST: api/Stores
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Userdb>> PostUserdb(Userdb userdb)
+        public async Task<ActionResult<Store>> PostStore(Store store)
         {
-            _context.Userdb.Add(userdb);
+            _context.Stores.Add(store);
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
-                if (UserdbExists(userdb.Id))
+                if (StoreExists(store.Name))
                 {
                     return Conflict();
                 }
@@ -94,28 +94,28 @@ namespace eCommerce.Controllers
                 }
             }
 
-            return CreatedAtAction("GetUserdb", new { id = userdb.Id }, userdb);
+            return CreatedAtAction("GetStore", new { id = store.Name }, store);
         }
 
-        // DELETE: api/Userdbs/5
+        // DELETE: api/Stores/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUserdb(int id)
+        public async Task<IActionResult> DeleteStore(string id)
         {
-            var userdb = await _context.Userdb.FindAsync(id);
-            if (userdb == null)
+            var store = await _context.Stores.FindAsync(id);
+            if (store == null)
             {
                 return NotFound();
             }
 
-            _context.Userdb.Remove(userdb);
+            _context.Stores.Remove(store);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool UserdbExists(int id)
+        private bool StoreExists(string id)
         {
-            return _context.Userdb.Any(e => e.Id == id);
+            return _context.Stores.Any(e => e.Name == id);
         }
     }
 }

@@ -11,47 +11,47 @@ namespace eCommerce.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class StoredbsController : ControllerBase
+    public class ProductsController : ControllerBase
     {
-        private readonly commerceDBContext _context;
+        private readonly ecommerceContext _context;
 
-        public StoredbsController(commerceDBContext context)
+        public ProductsController(ecommerceContext context)
         {
             _context = context;
         }
 
-        // GET: api/Storedbs
+        // GET: api/Products
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Storedb>>> GetStoredb()
+        public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
         {
-            return await _context.Storedb.ToListAsync();
+            return await _context.Products.ToListAsync();
         }
 
-        // GET: api/Storedbs/5
+        // GET: api/Products/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Storedb>> GetStoredb(string id)
+        public async Task<ActionResult<Product>> GetProduct(int id)
         {
-            var storedb = await _context.Storedb.FindAsync(id);
+            var product = await _context.Products.FindAsync(id);
 
-            if (storedb == null)
+            if (product == null)
             {
                 return NotFound();
             }
 
-            return storedb;
+            return product;
         }
 
-        // PUT: api/Storedbs/5
+        // PUT: api/Products/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutStoredb(string id, Storedb storedb)
+        public async Task<IActionResult> PutProduct(int id, Product product)
         {
-            if (id != storedb.Name)
+            if (id != product.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(storedb).State = EntityState.Modified;
+            _context.Entry(product).State = EntityState.Modified;
 
             try
             {
@@ -59,7 +59,7 @@ namespace eCommerce.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!StoredbExists(id))
+                if (!ProductExists(id))
                 {
                     return NotFound();
                 }
@@ -72,19 +72,19 @@ namespace eCommerce.Controllers
             return NoContent();
         }
 
-        // POST: api/Storedbs
+        // POST: api/Products
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Storedb>> PostStoredb(Storedb storedb)
+        public async Task<ActionResult<Product>> PostProduct(Product product)
         {
-            _context.Storedb.Add(storedb);
+            _context.Products.Add(product);
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
-                if (StoredbExists(storedb.Name))
+                if (ProductExists(product.Id))
                 {
                     return Conflict();
                 }
@@ -94,28 +94,28 @@ namespace eCommerce.Controllers
                 }
             }
 
-            return CreatedAtAction("GetStoredb", new { id = storedb.Name }, storedb);
+            return CreatedAtAction("GetProduct", new { id = product.Id }, product);
         }
 
-        // DELETE: api/Storedbs/5
+        // DELETE: api/Products/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteStoredb(string id)
+        public async Task<IActionResult> DeleteProduct(int id)
         {
-            var storedb = await _context.Storedb.FindAsync(id);
-            if (storedb == null)
+            var product = await _context.Products.FindAsync(id);
+            if (product == null)
             {
                 return NotFound();
             }
 
-            _context.Storedb.Remove(storedb);
+            _context.Products.Remove(product);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool StoredbExists(string id)
+        private bool ProductExists(int id)
         {
-            return _context.Storedb.Any(e => e.Name == id);
+            return _context.Products.Any(e => e.Id == id);
         }
     }
 }
