@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using eCommerce.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace eCommerce.Controllers
 {
@@ -28,7 +25,7 @@ namespace eCommerce.Controllers
         }
 
         // GET: api/Buyers/5
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), Authorize(Roles = "super-admin")]
         public async Task<ActionResult<Buyer>> GetBuyer(int id)
         {
             var buyer = await _context.Buyers.FindAsync(id);
