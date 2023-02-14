@@ -1,11 +1,9 @@
 ﻿using eCommerce.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Security.Cryptography;
 
 namespace eCommerce.Controllers;
 
@@ -29,9 +27,10 @@ public class AuthController : ControllerBase
         {
             return BadRequest("User already exists.");
         }
-
+        Random rnd = new Random();
         var buyer = new Buyer
         {
+            Id = _context.Buyers.Count() + 1,
             Email = request.Email,
             Password = request.Password,
             Role = "user"
