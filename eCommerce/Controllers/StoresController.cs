@@ -1,5 +1,6 @@
 ﻿using eCommerce.Data;
 using eCommerce.Models;
+using eCommerce.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,10 +12,12 @@ namespace eCommerce.Controllers
     public class StoresController : ControllerBase
     {
         private readonly ecommerceContext _context;
+        private IStoreService _storeService;
 
-        public StoresController(ecommerceContext context)
+        public StoresController(ecommerceContext context, IStoreService storeService)
         {
             _context = context;
+            _storeService = storeService;
         }
 
 
@@ -71,6 +74,7 @@ namespace eCommerce.Controllers
         [HttpPost]
         public async Task<ActionResult<Store>> PostStore(Store store)
         {
+
             _context.Stores.Add(store);
             try
             {
@@ -96,15 +100,11 @@ namespace eCommerce.Controllers
         public async Task<IActionResult> DeleteStore(string name)
         {
             var store = await _context.Stores.FindAsync(name);
-            // var deleteProducts = _context.Products.FindAsync(p).ToListAsync();
-
-
-            if (store == null)
+            if (store != null && name != null)
             {
-                return NotFound();
+                await _storeService.DeleteStore(name);
+                _context.Stores.Remove(store);
             }
-
-            _context.Stores.Remove(store);
             await _context.SaveChangesAsync();
 
             return NoContent();
