@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace eCommerce.Models;
+﻿namespace eCommerce.Models;
 
 public partial class Store
 {
+    public int Id { get; set; }
     public string Name { get; set; } = null!;
     public int UniqueStoreId { get; set; }
-    public int? Id { get; set; }
 }

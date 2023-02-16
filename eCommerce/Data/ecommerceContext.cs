@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using eCommerce.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace eCommerce.Models;
+namespace eCommerce.Data;
 
 public partial class ecommerceContext : DbContext
 {

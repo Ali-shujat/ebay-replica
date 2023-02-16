@@ -1,4 +1,5 @@
-﻿using eCommerce.Models;
+﻿using eCommerce.Data;
+using eCommerce.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -62,7 +63,7 @@ public class AuthController : ControllerBase
         string token = CreateToken(buyer);
 
         //return Ok($"Welcome back, {user.Email}! :)");
-        return Ok("bearer " + token);
+        return Ok(token);
     }
 
 

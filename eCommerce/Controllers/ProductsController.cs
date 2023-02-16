@@ -1,4 +1,5 @@
-﻿using eCommerce.Models;
+﻿using eCommerce.Data;
+using eCommerce.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +8,7 @@ namespace eCommerce.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "admin,super-admin")]
+    //[Authorize(Roles = "admin,super-admin")]
     public class ProductsController : ControllerBase
     {
         private readonly ecommerceContext _context;
@@ -40,7 +41,7 @@ namespace eCommerce.Controllers
 
         // PUT: api/Products/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize(Roles = "admin,super-admin")]
         public async Task<IActionResult> PutProduct(int id, Product product)
         {
             if (id != product.Id)
@@ -71,10 +72,26 @@ namespace eCommerce.Controllers
 
         // POST: api/Products
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Product>> PostProduct(Product product)
+        [HttpPost, Authorize(Roles = "admin,super-admin")]
+        public async Task<ActionResult<Product>> PostProduct(Product product, int uniqueId)
         {
-            _context.Products.Add(product);
+            var product_status = _context.Products.FirstOrDefaultAsync(p => p.Title == product.Title);
+            if (product_status != null)
+            {
+                return BadRequest();
+            }
+            var newProduct = new Product()
+            {
+                Title = product.Title,
+                Category = product.Category,
+                StoreId = uniqueId,
+                Description = product.Description,
+                Id = _context.Products.Count() + 1,
+                Price = product.Price,
+                Quantity = product.Quantity,
+                ImageUrl = product.ImageUrl
+            };
+            _context.Products.Add(newProduct);
             try
             {
                 await _context.SaveChangesAsync();
@@ -95,7 +112,7 @@ namespace eCommerce.Controllers
         }
 
         // DELETE: api/Products/5
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize(Roles = "admin,super-admin")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
             var product = await _context.Products.FindAsync(id);

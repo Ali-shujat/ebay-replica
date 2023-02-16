@@ -1,5 +1,5 @@
-﻿using eCommerce.Models;
-using Microsoft.AspNetCore.Authorization;
+﻿using eCommerce.Data;
+using eCommerce.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,7 +7,7 @@ namespace eCommerce.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "super-admin")]
+    // [Authorize(Roles = "super-admin")]
     public class StoresController : ControllerBase
     {
         private readonly ecommerceContext _context;
@@ -17,14 +17,14 @@ namespace eCommerce.Controllers
             _context = context;
         }
 
-        // GET: api/Stores
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Store>>> GetStores()
         {
             return await _context.Stores.ToListAsync();
         }
 
-        // GET: api/Stores/5
+
         [HttpGet("{id}")]
         public async Task<ActionResult<Store>> GetStore(string id)
         {
@@ -38,8 +38,6 @@ namespace eCommerce.Controllers
             return store;
         }
 
-        // PUT: api/Stores/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutStore(string id, Store store)
         {
@@ -94,10 +92,13 @@ namespace eCommerce.Controllers
         }
 
         // DELETE: api/Stores/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteStore(string id)
+        [HttpDelete("{name}")]
+        public async Task<IActionResult> DeleteStore(string name)
         {
-            var store = await _context.Stores.FindAsync(id);
+            var store = await _context.Stores.FindAsync(name);
+            // var deleteProducts = _context.Products.FindAsync(p).ToListAsync();
+
+
             if (store == null)
             {
                 return NotFound();
@@ -109,9 +110,13 @@ namespace eCommerce.Controllers
             return NoContent();
         }
 
-        private bool StoreExists(string id)
+        private bool StoreExists(string name)
         {
-            return _context.Stores.Any(e => e.Name == id);
+            return _context.Stores.Any(e => e.Name == name);
+        }
+        private async Task<IEnumerable<Product>> GetAllProducts()
+        {
+            return await _context.Products.ToListAsync();
         }
     }
 }

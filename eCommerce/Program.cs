@@ -1,10 +1,10 @@
-using eCommerce.Models;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using eCommerce.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 

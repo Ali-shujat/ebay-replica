@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using eCommerce.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
+using eCommerce.Data;
 
 namespace eCommerce.Controllers
 {
