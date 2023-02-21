@@ -4,7 +4,7 @@
     {
         string GetStoreName();
         Task DeleteStore(string storeName);
-        Task<Task> CreateStore(string storeName);
+        Task CreateStoreAsync(string storeName);
 
 
     }

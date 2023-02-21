@@ -1,6 +1,5 @@
 ﻿using eCommerce.Data;
 using eCommerce.Models;
-using Microsoft.EntityFrameworkCore;
 using System.Data;
 
 namespace eCommerce.Services
@@ -14,22 +13,17 @@ namespace eCommerce.Services
             _dbContext = dbContext;
         }
 
-        public async Task<Task> CreateStore(string storeName)
+        public Task CreateStoreAsync(string storeName)
         {
-            var storeCount = _dbContext.Stores.FirstOrDefaultAsync(s => s.Name == storeName);
-            if (storeCount == null)
+            var nyaStore = new Store()
             {
-                Random rnd = new Random();
-                var nyaStore = new Store()
-                {
-                    Id = rnd.Next(1, 100),
-                    Name = storeName,
-                    UniqueStoreId = _dbContext.Stores.Count() + 1
-                };
-                _dbContext.Stores.Add(nyaStore);
-            }
+                Id = _dbContext.Stores.Count() + 10,
+                Name = storeName,
+                UniqueStoreId = _dbContext.Stores.Count() + 1
+            };
+            _dbContext.Stores.Add(nyaStore);
 
-            await _dbContext.SaveChangesAsync();
+            _dbContext.SaveChangesAsync();
 
 
             return Task.CompletedTask;

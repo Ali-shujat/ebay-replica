@@ -1,6 +1,7 @@
 ﻿using eCommerce.Data;
 using eCommerce.Models;
 using eCommerce.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,7 +29,7 @@ namespace eCommerce.Controllers
         }
 
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), Authorize(Roles = "super-admin")]
         public async Task<ActionResult<Store>> GetStore(string id)
         {
             var store = await _context.Stores.FindAsync(id);
@@ -41,7 +42,7 @@ namespace eCommerce.Controllers
             return store;
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize(Roles = "super-admin,admin")]
         public async Task<IActionResult> PutStore(string id, Store store)
         {
             if (id != store.Name)
@@ -70,19 +71,20 @@ namespace eCommerce.Controllers
             return NoContent();
         }
 
-        // POST: api/Stores
-        [HttpPost]
-        public async Task<ActionResult<Store>> PostStore(Store store)
-        {
 
-            _context.Stores.Add(store);
+        [HttpPost, Authorize(Roles = "super-admin")]
+        public async Task<ActionResult<Store>> PostStore(string storeName)
+        {
+            //_context.Stores.Add(store);
             try
             {
-                await _context.SaveChangesAsync();
+                // await _context.SaveChangesAsync();
+                await _storeService.CreateStoreAsync(storeName);
+
             }
             catch (DbUpdateException)
             {
-                if (StoreExists(store.Name))
+                if (StoreExists(storeName))
                 {
                     return Conflict();
                 }
@@ -92,11 +94,12 @@ namespace eCommerce.Controllers
                 }
             }
 
-            return CreatedAtAction("GetStore", new { id = store.Name }, store);
+
+            return CreatedAtAction("GetStore", new { id = storeName }, storeName);
         }
 
-        // DELETE: api/Stores/5
-        [HttpDelete("{name}")]
+
+        [HttpDelete("{name}"), Authorize(Roles = "super-admin")]
         public async Task<IActionResult> DeleteStore(string name)
         {
             var store = await _context.Stores.FindAsync(name);
@@ -113,10 +116,6 @@ namespace eCommerce.Controllers
         private bool StoreExists(string name)
         {
             return _context.Stores.Any(e => e.Name == name);
-        }
-        private async Task<IEnumerable<Product>> GetAllProducts()
-        {
-            return await _context.Products.ToListAsync();
         }
     }
 }
