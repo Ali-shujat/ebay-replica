@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using eCommerce.Models;
+﻿using eCommerce.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace eCommerce.Data;
 
@@ -20,6 +17,7 @@ public partial class ecommerceContext : DbContext
     public virtual DbSet<Buyer> Buyers { get; set; } = null!;
     public virtual DbSet<Product> Products { get; set; } = null!;
     public virtual DbSet<Store> Stores { get; set; } = null!;
+    public virtual DbSet<User> Users { get; set; } = null!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

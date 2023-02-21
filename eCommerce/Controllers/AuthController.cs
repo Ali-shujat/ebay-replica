@@ -32,9 +32,10 @@ public class AuthController : ControllerBase
         var buyer = new Buyer
         {
             Id = _context.Buyers.Count() + 1,
+            Name = request.Name,
             Email = request.Email,
             Password = request.Password,
-            Role = "user"
+            Role = request.Role
         };
 
         _context.Buyers.Add(buyer);
@@ -63,7 +64,7 @@ public class AuthController : ControllerBase
         string token = CreateToken(buyer);
 
         //return Ok($"Welcome back, {user.Email}! :)");
-        return Ok(token);
+        return Ok(new { Token = token, User = buyer });
     }
 
 
