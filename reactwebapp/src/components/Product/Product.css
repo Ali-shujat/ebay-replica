@@ -1,0 +1,10 @@
+.Product{
+    margin: 10% 40%;
+  }
+  .read-more-link{
+    color: blueviolet;
+    text-decoration: underline;
+    letter-spacing: 1px;
+    cursor: pointer;
+  }
+ 
