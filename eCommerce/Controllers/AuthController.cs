@@ -53,8 +53,8 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login(BuyerLoginRequest request)
     {
-        _logger.LogInformation("login page visited at {DT}",
-            DateTime.UtcNow.ToLongTimeString());
+        _logger.LogInformation("login page visited at {0} by user :{1}",
+            DateTime.UtcNow.ToLongTimeString(), request.Email);
 
         var buyer = await _context.Buyers.FirstOrDefaultAsync(u => u.Email == request.Email);
         if (buyer == null)

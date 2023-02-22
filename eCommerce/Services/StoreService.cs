@@ -29,9 +29,9 @@ namespace eCommerce.Services
             return Task.CompletedTask;
         }
 
-        public Task DeleteStore(string storeName)
+        public void DeleteStore(Store store)
         {
-            var store = _dbContext.Stores.Find(storeName);
+            // var store = await _dbContext.Stores.FindAsync(storeName);
             if (store != null)
             {
                 var productList = _dbContext.Products.Where(r => r.StoreId.Equals(store.UniqueStoreId));
@@ -42,10 +42,6 @@ namespace eCommerce.Services
 
                 _dbContext.SaveChanges();
             }
-
-
-
-            return Task.CompletedTask;
 
         }
     }

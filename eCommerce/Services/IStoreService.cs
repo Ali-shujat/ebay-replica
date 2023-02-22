@@ -1,10 +1,12 @@
-﻿namespace eCommerce.Services
+﻿using eCommerce.Models;
+
+namespace eCommerce.Services
 {
     public interface IStoreService
     {
 
-        Task DeleteStore(string storeName);
-        Task CreateStoreAsync(string storeName);
+        void DeleteStore(Store store);
+        Task CreateStoreAsync(string storeNam);
 
 
     }

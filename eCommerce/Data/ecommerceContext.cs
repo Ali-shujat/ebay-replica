@@ -94,22 +94,22 @@ public partial class ecommerceContext : DbContext
                 .HasColumnName("title");
         });
 
-        //modelBuilder.Entity<Store>(entity =>
-        //{
-        //    entity.HasKey(e => e.Name)
-        //        .HasName("PK__Store__72E12F1AA1577EED");
+        modelBuilder.Entity<Store>(entity =>
+        {
+            entity.HasKey(e => e.Id);
 
-        //    entity.ToTable("Store");
 
-        //    entity.Property(e => e.Name)
-        //        .HasMaxLength(30)
-        //        .IsUnicode(false)
-        //        .HasColumnName("name");
+            entity.ToTable("Stores");
 
-        //    entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Name)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("name");
 
-        //    entity.Property(e => e.UniqueStoreId).HasColumnName("uniqueStoreId");
-        //});
+            entity.Property(e => e.Id).HasColumnName("id");
+
+            entity.Property(e => e.UniqueStoreId).HasColumnName("uniqueStoreId");
+        });
 
         OnModelCreatingPartial(modelBuilder);
     }
