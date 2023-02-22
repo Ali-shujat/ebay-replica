@@ -42,33 +42,29 @@ namespace eCommerce.Controllers
             return store;
         }
 
-        [HttpPut("{id}"), Authorize(Roles = "super-admin,admin")]
-        public async Task<IActionResult> PutStore(string id, Store store)
+        [HttpPut("{id}"), Authorize(Roles = "super-admin")]
+        public async Task<IActionResult> PutStore(int id, string name)
         {
-            if (id != store.Name)
+            var store = await _context.Stores.FirstOrDefaultAsync(c => c.Id == id);
+            if (store != null && name != null)
             {
-                return BadRequest();
+                store.Name = name;
             }
 
             _context.Entry(store).State = EntityState.Modified;
+            _context.Update(store);
 
             try
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException e)
             {
-                if (!StoreExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                Console.WriteLine(e.Message);
+                throw;
             }
 
-            return NoContent();
+            return Ok(name);
         }
 
 

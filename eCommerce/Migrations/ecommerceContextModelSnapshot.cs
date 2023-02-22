@@ -25,15 +25,14 @@ namespace eCommerce.Migrations
             modelBuilder.Entity("eCommerce.Models.Buyer", b =>
                 {
                     b.Property<int>("Id")
-                        .HasColumnType("int")
-                        .HasColumnName("id");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(31)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(31)")
-                        .HasColumnName("email");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -41,101 +40,77 @@ namespace eCommerce.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasMaxLength(12)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(12)")
-                        .HasColumnName("password");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Role")
                         .IsRequired()
-                        .HasMaxLength(11)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(11)")
-                        .HasColumnName("role");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UniqueStoreId")
-                        .HasColumnType("int")
-                        .HasColumnName("uniqueStoreId");
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Buyer", (string)null);
+                    b.ToTable("Buyers");
                 });
 
             modelBuilder.Entity("eCommerce.Models.Product", b =>
                 {
                     b.Property<int>("Id")
-                        .HasColumnType("int")
-                        .HasColumnName("id");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Category")
                         .IsRequired()
-                        .HasMaxLength(11)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(11)")
-                        .HasColumnName("category");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(552)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(552)")
-                        .HasColumnName("description");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImageUrl")
                         .IsRequired()
-                        .HasMaxLength(47)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(47)")
-                        .HasColumnName("imageUrl");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Price")
                         .IsRequired()
-                        .HasMaxLength(5)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(5)")
-                        .HasColumnName("price");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Quantity")
-                        .HasColumnType("int")
-                        .HasColumnName("quantity");
+                        .HasColumnType("int");
 
                     b.Property<int>("StoreId")
-                        .HasColumnType("int")
-                        .HasColumnName("storeId");
+                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(62)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(62)")
-                        .HasColumnName("title");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Product", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("eCommerce.Models.Store", b =>
                 {
-                    b.Property<string>("Name")
-                        .HasMaxLength(30)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(30)")
-                        .HasColumnName("name");
-
                     b.Property<int>("Id")
-                        .HasColumnType("int")
-                        .HasColumnName("id");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UniqueStoreId")
-                        .HasColumnType("int")
-                        .HasColumnName("uniqueStoreId");
+                        .HasColumnType("int");
 
-                    b.HasKey("Name")
-                        .HasName("PK__Store__72E12F1AA1577EED");
+                    b.HasKey("Id");
 
-                    b.ToTable("Store", (string)null);
+                    b.ToTable("Stores");
                 });
 
             modelBuilder.Entity("eCommerce.Models.User", b =>

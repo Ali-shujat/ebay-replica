@@ -14,16 +14,20 @@ public class AuthController : ControllerBase
 {
     private readonly ecommerceContext _context;
     private readonly IConfiguration _configuration;
+    private readonly ILogger<AuthController> _logger;
 
-    public AuthController(ecommerceContext context, IConfiguration configuration)
+    public AuthController(ecommerceContext context, IConfiguration configuration, ILogger<AuthController> logger)
     {
         _context = context;
         _configuration = configuration;
+        _logger = logger;
     }
 
     [HttpPost("register")]
     public async Task<ActionResult<Buyer>> Register(BuyerDto request)
     {
+        _logger.LogInformation("Register page visited at {0} by user {1}",
+            DateTime.UtcNow.ToLongTimeString(), request.Name);
         if (_context.Buyers.Any(u => u.Email == request.Email))
         {
             return BadRequest("User already exists.");
@@ -49,6 +53,9 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login(BuyerLoginRequest request)
     {
+        _logger.LogInformation("login page visited at {DT}",
+            DateTime.UtcNow.ToLongTimeString());
+
         var buyer = await _context.Buyers.FirstOrDefaultAsync(u => u.Email == request.Email);
         if (buyer == null)
         {
@@ -62,6 +69,7 @@ public class AuthController : ControllerBase
 
         //adding JWT token
         string token = CreateToken(buyer);
+
 
         //return Ok($"Welcome back, {user.Email}! :)");
         return Ok(new { Token = token, User = buyer });

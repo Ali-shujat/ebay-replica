@@ -17,7 +17,7 @@ namespace eCommerce.Services
         {
             var nyaStore = new Store()
             {
-                Id = _dbContext.Stores.Count() + 10,
+
                 Name = storeName,
                 UniqueStoreId = _dbContext.Stores.Count() + 1
             };
@@ -47,11 +47,6 @@ namespace eCommerce.Services
 
             return Task.CompletedTask;
 
-        }
-
-        public string GetStoreName()
-        {
-            throw new NotImplementedException();
         }
     }
 }

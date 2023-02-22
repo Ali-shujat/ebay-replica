@@ -45,7 +45,8 @@ namespace eCommerce.Controllers
                 PasswordSalt = passwordSalt,
                 VerificationToken = CreateRandomToken()
             };
-
+            //send email method
+            //SendEmail.CreateEmail(request.Email, user.VerificationToken);
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
@@ -161,7 +162,8 @@ namespace eCommerce.Controllers
             //var jwt = _configuration.GetSection("Jwt").Get<Jwt>();
             List<Claim> claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.Name), new Claim(ClaimTypes.Role, "Admin")
+                  new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Role, user.Role)
             };
 
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
