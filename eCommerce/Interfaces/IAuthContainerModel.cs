@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 
-namespace eCommerce.Services
+namespace eCommerce.Interfaces
 {
     public interface IAuthContainerModel
     {

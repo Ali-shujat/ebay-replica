@@ -1,4 +1,5 @@
 ﻿using eCommerce.Data;
+using eCommerce.Interfaces;
 
 namespace eCommerce.Services
 {

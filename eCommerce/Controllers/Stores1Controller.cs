@@ -1,6 +1,6 @@
 ﻿using eCommerce.Data;
+using eCommerce.Interfaces;
 using eCommerce.Models;
-using eCommerce.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

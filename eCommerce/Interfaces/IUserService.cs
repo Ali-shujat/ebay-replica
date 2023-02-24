@@ -1,6 +1,6 @@
 ﻿using eCommerce.Models;
 
-namespace eCommerce.Services
+namespace eCommerce.Interfaces
 {
     public interface IUserService
     {

@@ -1,4 +1,5 @@
 using eCommerce.Data;
+using eCommerce.Interfaces;
 using eCommerce.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
