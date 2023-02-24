@@ -8,7 +8,7 @@ namespace eCommerce.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize(Roles = "admin,super-admin")]
+
     public class ProductsController : ControllerBase
     {
         private readonly ecommerceContext _context;
@@ -39,17 +39,28 @@ namespace eCommerce.Controllers
             return product;
         }
 
-        // PUT: api/Products/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+
         [HttpPut("{id}"), Authorize(Roles = "admin,super-admin")]
-        public async Task<IActionResult> PutProduct(int id, Product product)
+        public async Task<IActionResult> PutProduct(int id, PostProductDto productDto)
         {
-            if (id != product.Id)
+            if (!ProductExists(id))
             {
                 return BadRequest();
             }
+            var product = _context.Products.Find(id);
+
+            product.Title = productDto.Title;
+            product.Description = productDto.Description;
+            product.Category = productDto.Category;
+            // product.Price = productDto.Price;
+            product.Quantity = productDto.Quantity;
+            product.Description = productDto.Description;
+            product.ImageUrl = productDto.ImageUrl;
+
+
 
             _context.Entry(product).State = EntityState.Modified;
+            _context.Update(product);
 
             try
             {
@@ -70,35 +81,31 @@ namespace eCommerce.Controllers
             return NoContent();
         }
 
-        // POST: api/Products
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+
         [HttpPost, Authorize(Roles = "admin,super-admin")]
-        public async Task<ActionResult<Product>> PostProduct(Product product, int uniqueId)
+        public async Task<ActionResult<Product>> PostProduct(PostProductDto postProductDto, int uniqueId)
         {
-            var product_status = _context.Products.FirstOrDefaultAsync(p => p.Title == product.Title);
-            if (product_status != null)
-            {
-                return BadRequest();
-            }
             var newProduct = new Product()
             {
-                Title = product.Title,
-                Category = product.Category,
-                StoreId = uniqueId,
-                Description = product.Description,
-                Id = _context.Products.Count() + 1,
-                Price = product.Price,
-                Quantity = product.Quantity,
-                ImageUrl = product.ImageUrl
+                Id = _context.Products.Count() + 100,
+                Title = postProductDto.Title,
+                Category = postProductDto.Category,
+                Description = postProductDto.Description,
+                Price = postProductDto.Price,
+                Quantity = postProductDto.Quantity,
+                ImageUrl = postProductDto.ImageUrl,
+                StoreId = uniqueId
             };
+
             _context.Products.Add(newProduct);
+            var product_status = _context.Products.FirstOrDefaultAsync(p => p.Title == postProductDto.Title);
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
-                if (ProductExists(product.Id))
+                if (ProductExists(product_status.Id))
                 {
                     return Conflict();
                 }
@@ -108,7 +115,7 @@ namespace eCommerce.Controllers
                 }
             }
 
-            return CreatedAtAction("GetProduct", new { id = product.Id }, product);
+            return CreatedAtAction("GetProduct", new { id = newProduct.Id }, newProduct);
         }
 
         // DELETE: api/Products/5

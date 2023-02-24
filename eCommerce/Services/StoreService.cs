@@ -1,5 +1,6 @@
 ﻿using eCommerce.Data;
 using eCommerce.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Data;
 
 namespace eCommerce.Services
@@ -44,5 +45,22 @@ namespace eCommerce.Services
             }
 
         }
+
+        public async Task<StoreProductsDto> GetStoreProducts(string email)
+        {
+            var user = await _dbContext.Buyers.Where(x => x.Email == email).FirstOrDefaultAsync();
+            if (user == null) throw new Exception("User not found");
+            var store = await _dbContext.Stores.Where(x => x.UniqueStoreId == user.UniqueStoreId).FirstOrDefaultAsync();
+            if (store == null) throw new Exception("Store not found");
+            var products = await _dbContext.Products.Where(x => x.StoreId == user.UniqueStoreId).ToListAsync();
+            return new StoreProductsDto
+            {
+                StoreId = store.Id,
+                UniqueStoreId = store.UniqueStoreId,
+                Name = store.Name,
+                ProductsList = products
+            };
+        }
+
     }
 }

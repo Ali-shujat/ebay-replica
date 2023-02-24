@@ -1,6 +1,7 @@
 ﻿using eCommerce.Data;
 using eCommerce.Models;
 using eCommerce.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,6 +9,7 @@ namespace eCommerce.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "admin")]
     public class Stores1Controller : ControllerBase
     {
         private readonly ecommerceContext _context;
@@ -70,7 +72,7 @@ namespace eCommerce.Controllers
             return NoContent();
         }
 
-        [HttpPost]
+        [HttpPost, Authorize(Roles = "super-admin")]
         public async Task<ActionResult<Store>> PostStore(string nyaStoreNam)
         {
             var oldstore = await _context.Stores.FirstOrDefaultAsync(o => o.Name == nyaStoreNam);
@@ -108,5 +110,7 @@ namespace eCommerce.Controllers
         {
             return _context.Stores.Any(e => e.Id == id);
         }
+
+
     }
 }

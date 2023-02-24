@@ -1,5 +1,6 @@
 ﻿using eCommerce.Data;
 using eCommerce.Models;
+using eCommerce.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -26,8 +27,10 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<ActionResult<Buyer>> Register(BuyerDto request)
     {
+        LoggingService.Log("Register info =>>" + "DATE:" + DateTime.UtcNow.ToLongTimeString() + "UserEmail:" + request.Email);
         _logger.LogInformation("Register page visited at {0} by user {1}",
             DateTime.UtcNow.ToLongTimeString(), request.Name);
+
         if (_context.Buyers.Any(u => u.Email == request.Email))
         {
             return BadRequest("User already exists.");
@@ -35,7 +38,7 @@ public class AuthController : ControllerBase
         Random rnd = new Random();
         var buyer = new Buyer
         {
-            Id = _context.Buyers.Count() + 1,
+            Id = rnd.Next(_context.Buyers.Count(), 100000),
             Name = request.Name,
             Email = request.Email,
             Password = request.Password,
@@ -53,6 +56,7 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login(BuyerLoginRequest request)
     {
+        LoggingService.Log("Login info =>>" + "DATE:" + DateTime.UtcNow.ToLongTimeString() + "UserEmail:" + request.Email);
         _logger.LogInformation("login page visited at {0} by user :{1}",
             DateTime.UtcNow.ToLongTimeString(), request.Email);
 

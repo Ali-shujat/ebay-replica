@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using eCommerce.Data;
 using eCommerce.Models;
 using Microsoft.AspNetCore.Authorization;
-using System.Data;
-using eCommerce.Data;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace eCommerce.Controllers
 {
@@ -19,7 +18,7 @@ namespace eCommerce.Controllers
         }
 
         // GET: api/Buyers
-        [HttpGet]
+        [HttpGet, Authorize(Roles = "super-admin")]
         public async Task<ActionResult<IEnumerable<Buyer>>> GetBuyers()
         {
             return await _context.Buyers.ToListAsync();

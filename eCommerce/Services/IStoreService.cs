@@ -7,6 +7,7 @@ namespace eCommerce.Services
 
         void DeleteStore(Store store);
         Task CreateStoreAsync(string storeNam);
+        Task<StoreProductsDto> GetStoreProducts(string email);
 
 
     }

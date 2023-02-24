@@ -14,6 +14,8 @@ builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddScoped<IStoreService, StoreService>();
+builder.Services.AddTransient<IJWTAuthService, JWTAuthService>();
+builder.Services.AddScoped<IAuthContainerModel, AuthContainerModel>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSwaggerGen(options =>
