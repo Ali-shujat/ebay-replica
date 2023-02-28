@@ -1,6 +1,7 @@
 ﻿using eCommerce.Data;
 using eCommerce.Models;
 using eCommerce.Models.UserDto;
+using eCommerce.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -44,13 +45,15 @@ namespace eCommerce.Controllers
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
                 VerificationToken = CreateRandomToken()
+
             };
+            var config = _configuration["Yahoo:Password"];
             //send email method
-            //SendEmail.CreateEmail(request.Email, user.VerificationToken);
+            SendEmail.SkickaEmail(request.Email, config, user.VerificationToken);
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            return Ok("User successfully created!");
+            return Ok("User successfully created! \n Please check your email!");
         }
 
         [HttpPost("login")]
