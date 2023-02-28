@@ -5,7 +5,8 @@ namespace eCommerce.Models;
 public partial class Store
 {
     [Key]
-    public int Id { get; set; }
+    public int StoreId { get; set; }
     public string Name { get; set; } = null!;
-    public int UniqueStoreId { get; set; }
+    public List<Product>? ProductList { get; set; }
+
 }

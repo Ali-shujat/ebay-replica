@@ -7,5 +7,5 @@ public partial class Buyer
     public string Email { get; set; } = null!;
     public string Password { get; set; } = null!;
     public string Role { get; set; } = null!;
-    public int UniqueStoreId { get; set; }
+    public int StoreId { get; set; }
 }

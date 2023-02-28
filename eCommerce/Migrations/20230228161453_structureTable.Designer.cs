@@ -12,14 +12,14 @@ using eCommerce.Data;
 namespace eCommerce.Migrations
 {
     [DbContext(typeof(ecommerceContext))]
-    [Migration("20230222123246_InitialCreate22022023")]
-    partial class InitialCreate22022023
+    [Migration("20230228161453_structureTable")]
+    partial class structureTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.13")
+                .HasAnnotation("ProductVersion", "6.0.14")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -48,7 +48,7 @@ namespace eCommerce.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UniqueStoreId")
+                    b.Property<int>("StoreId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -58,11 +58,11 @@ namespace eCommerce.Migrations
 
             modelBuilder.Entity("eCommerce.Models.Product", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ProductId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductId"), 1L, 1);
 
                     b.Property<string>("Category")
                         .IsRequired()
@@ -90,27 +90,26 @@ namespace eCommerce.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("ProductId");
+
+                    b.HasIndex("StoreId");
 
                     b.ToTable("Products");
                 });
 
             modelBuilder.Entity("eCommerce.Models.Store", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("StoreId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StoreId"), 1L, 1);
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UniqueStoreId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
+                    b.HasKey("StoreId");
 
                     b.ToTable("Stores");
                 });
@@ -147,6 +146,9 @@ namespace eCommerce.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UniqueStoreId")
+                        .HasColumnType("int");
+
                     b.Property<string>("VerificationToken")
                         .HasColumnType("nvarchar(max)");
 
@@ -156,6 +158,22 @@ namespace eCommerce.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("eCommerce.Models.Product", b =>
+                {
+                    b.HasOne("eCommerce.Models.Store", "Store")
+                        .WithMany("ProductList")
+                        .HasForeignKey("StoreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Store");
+                });
+
+            modelBuilder.Entity("eCommerce.Models.Store", b =>
+                {
+                    b.Navigation("ProductList");
                 });
 #pragma warning restore 612, 618
         }

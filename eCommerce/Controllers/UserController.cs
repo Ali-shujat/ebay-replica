@@ -81,7 +81,7 @@ namespace eCommerce.Controllers
             //SetRefreshToken(refreshToken);
 
             //return Ok($"Welcome back :), {user.Email}! Bearer token is = {token}");
-            return Ok(new { Token = token, User = user });
+            return Ok(new { Token = token, Role = user.Role });
         }
 
         [HttpPost("verify")]

@@ -87,7 +87,7 @@ namespace eCommerce.Controllers
         {
             var newProduct = new Product()
             {
-                Id = _context.Products.Count() + 100,
+                ProductId = new int(),
                 Title = postProductDto.Title,
                 Category = postProductDto.Category,
                 Description = postProductDto.Description,
@@ -115,7 +115,7 @@ namespace eCommerce.Controllers
                 }
             }
 
-            return CreatedAtAction("GetProduct", new { id = newProduct.Id }, newProduct);
+            return CreatedAtAction("GetProduct", new { id = newProduct.ProductId }, newProduct);
         }
 
         // DELETE: api/Products/5
@@ -136,7 +136,7 @@ namespace eCommerce.Controllers
 
         private bool ProductExists(int id)
         {
-            return _context.Products.Any(e => e.Id == id);
+            return _context.Products.Any(e => e.ProductId == id);
         }
     }
 }

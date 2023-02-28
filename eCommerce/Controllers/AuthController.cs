@@ -1,5 +1,6 @@
 ﻿using eCommerce.Data;
 using eCommerce.Models;
+using eCommerce.Models.UserDto;
 using eCommerce.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -25,28 +26,14 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<ActionResult<Buyer>> Register(BuyerDto request)
+    public async Task<ActionResult<User>> Register(UserRegisterRequest request)
     {
-        LoggingService.Log("Register info =>>" + "DATE:" + DateTime.UtcNow.ToLongTimeString() + "UserEmail:" + request.Email);
+        LoggingService.Log("Register info =>> " +
+            "DATE:" + DateTime.UtcNow.ToLongTimeString() +
+            "UserEmail:" + request.Email);
+
         _logger.LogInformation("Register page visited at {0} by user {1}",
             DateTime.UtcNow.ToLongTimeString(), request.Name);
-
-        if (_context.Buyers.Any(u => u.Email == request.Email))
-        {
-            return BadRequest("User already exists.");
-        }
-        Random rnd = new Random();
-        var buyer = new Buyer
-        {
-            Id = rnd.Next(_context.Buyers.Count(), 100000),
-            Name = request.Name,
-            Email = request.Email,
-            Password = request.Password,
-            Role = request.Role
-        };
-
-        _context.Buyers.Add(buyer);
-        await _context.SaveChangesAsync();
 
         return Ok("User successfully created!");
     }
@@ -54,39 +41,44 @@ public class AuthController : ControllerBase
 
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login(BuyerLoginRequest request)
+    public async Task<IActionResult> Login(UserLoginRequest request)
     {
         LoggingService.Log("Login info =>>" + "DATE:" + DateTime.UtcNow.ToLongTimeString() + "UserEmail:" + request.Email);
         _logger.LogInformation("login page visited at {0} by user :{1}",
             DateTime.UtcNow.ToLongTimeString(), request.Email);
 
-        var buyer = await _context.Buyers.FirstOrDefaultAsync(u => u.Email == request.Email);
-        if (buyer == null)
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+        if (user == null)
         {
             return BadRequest("User not found.");
         }
 
-        if (buyer.Password != request.Password)
+        if (!HashTokenService.VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
         {
             return BadRequest("Password is incorrect.");
         }
 
+        if (user.VerifiedAt == null)
+        {
+            return BadRequest("Not verified!");
+        }
+
         //adding JWT token
-        string token = CreateToken(buyer);
+        string token = CreateToken(user);
 
 
         //return Ok($"Welcome back, {user.Email}! :)");
-        return Ok(new { Token = token, User = buyer });
+        return Ok(new { Token = token, User = user });
     }
 
 
 
-    private string CreateToken(Buyer buyer)
+    private string CreateToken(User user)
     {
         List<Claim> claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Email, buyer.Email),
-                new Claim(ClaimTypes.Role, buyer.Role)
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Role, user.Role)
             };
 
         var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(

@@ -25,3 +25,6 @@
 24/02/2023 09:16:55 - Login info =>>DATE:08:16:55UserEmail:hdominiquei@ft.com
 28/02/2023 10:09:59 - Login info =>>DATE:09:09:59UserEmail:user@example.com
 28/02/2023 10:14:47 - Login info =>>DATE:09:14:47UserEmail:1user@example.com
+28/02/2023 14:05:22 - Register info =>> DATE:13:05:22UserEmail:user@example.com
+28/02/2023 14:06:05 - Register info =>> DATE:13:06:05UserEmail:user@example.com
+28/02/2023 21:09:47 - Login info =>>DATE:20:09:47UserEmail:user1@example.com
