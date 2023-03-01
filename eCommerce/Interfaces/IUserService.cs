@@ -1,16 +1,14 @@
 ﻿using eCommerce.Models;
 using eCommerce.Models.UserDto;
 
-namespace eCommerce.Interfaces
+namespace eCommerce.Interfaces;
+
+public interface IUserService
 {
-    public interface IUserService
-    {
-        Task<IEnumerable<Product>> GetAllUsers();
-        Task<IEnumerable<User>> GetUserById(Guid userId);
-        Task DeleteUser(Guid userId);
-        Task CreateUser(UserRegisterRequest request);
-        Task UpdateUser(User user);
-
-
-    }
+    Task<IEnumerable<User>> GetAllUsers();
+    Task<User> GetUserById(Guid userId);
+    Task DeleteUser(Guid userId);
+    Task CreateUser(UserRegisterRequest request);
+    Task UpdateUser(User user);
+    User GetUserByEmailAsync(string email);
 }

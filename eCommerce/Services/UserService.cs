@@ -2,10 +2,6 @@
 using eCommerce.Interfaces;
 using eCommerce.Models;
 using eCommerce.Models.UserDto;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Security.Cryptography;
 
 namespace eCommerce.Services
 {
@@ -27,7 +23,7 @@ namespace eCommerce.Services
                 return Task.FromResult("User already exists.");
             }
 
-            CreatePasswordHash(request.Password,
+            HashTokenService.CreatePasswordHash(request.Password,
                  out byte[] passwordHash,
                  out byte[] passwordSalt);
 
@@ -38,7 +34,7 @@ namespace eCommerce.Services
                 Email = request.Email,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
-                VerificationToken = CreateRandomToken()
+                VerificationToken = HashTokenService.CreateRandomToken()
 
             };
             var config = _configuration["Yahoo:Password"];
@@ -60,66 +56,33 @@ namespace eCommerce.Services
             return Task.CompletedTask;
         }
 
-        public Task<IEnumerable<Product>> GetAllUsers()
+        public Task<IEnumerable<User>> GetAllUsers()
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<User>> GetUserById(Guid userId)
+        public async Task<User> GetUserById(Guid userId)
         {
-            throw new NotImplementedException();
+            User usr = await _context.Users.FindAsync(userId);
+            return usr;
         }
 
         public Task UpdateUser(User user)
         {
             throw new NotImplementedException();
         }
-        private string CreateRandomToken()
+
+        public User GetUserByEmailAsync(string email)
         {
-            return Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
-        }
-        private string CreateToken(User user)
-        {
-            //var jwt = _configuration.GetSection("Jwt").Get<Jwt>();
-            List<Claim> claims = new List<Claim>
+            var user = _context.Users.Where(w => w.Email == email).FirstOrDefault();
+            if (user == null)
             {
-                  new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Role)
-            };
-
-            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
-                _configuration.GetSection("AppSettings:Token").Value));
-
-
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-
-            var token = new JwtSecurityToken(
-                claims: claims,
-                expires: DateTime.Now.AddDays(1),
-                signingCredentials: creds);
-
-            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-
-            return jwt;
-        }
-        private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
-        {
-            using (var hmac = new HMACSHA512())
-            {
-                passwordSalt = hmac.Key;
-                passwordHash = hmac
-                    .ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+                return null;
             }
+            return user;
+
         }
 
-        private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
-        {
-            using (var hmac = new HMACSHA512(passwordSalt))
-            {
-                var computedHash = hmac
-                    .ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-                return computedHash.SequenceEqual(passwordHash);
-            }
-        }
+
     }
 }

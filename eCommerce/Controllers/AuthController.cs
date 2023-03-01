@@ -1,9 +1,8 @@
-﻿using eCommerce.Data;
+﻿using eCommerce.Interfaces;
 using eCommerce.Models;
 using eCommerce.Models.UserDto;
 using eCommerce.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -14,19 +13,28 @@ namespace eCommerce.Controllers;
 [ApiController]
 public class AuthController : ControllerBase
 {
-    private readonly ecommerceContext _context;
+
     private readonly IConfiguration _configuration;
     private readonly ILogger<AuthController> _logger;
+    private readonly IUserService _userService;
+    private readonly IJWTAuthService _authService;
 
-    public AuthController(ecommerceContext context, IConfiguration configuration, ILogger<AuthController> logger)
+    public AuthController(
+        IConfiguration configuration,
+        ILogger<AuthController> logger,
+        IUserService userService,
+        IJWTAuthService authService
+        )
     {
-        _context = context;
+
         _configuration = configuration;
         _logger = logger;
+        _userService = userService;
+        _authService = authService;
     }
 
     [HttpPost("register")]
-    public async Task<ActionResult<User>> Register(UserRegisterRequest request)
+    public ActionResult<User> Register(UserRegisterRequest request)
     {
         LoggingService.Log("Register info =>> " +
             "DATE:" + DateTime.UtcNow.ToLongTimeString() +
@@ -34,20 +42,25 @@ public class AuthController : ControllerBase
 
         _logger.LogInformation("Register page visited at {0} by user {1}",
             DateTime.UtcNow.ToLongTimeString(), request.Name);
+        _userService.CreateUser(request);
 
-        return Ok("User successfully created!");
+        return Ok("User successfully created! \n Please check your email!");
     }
 
 
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login(UserLoginRequest request)
+    public IActionResult Login(UserLoginRequest request)
     {
-        LoggingService.Log("Login info =>>" + "DATE:" + DateTime.UtcNow.ToLongTimeString() + "UserEmail:" + request.Email);
+        LoggingService.Log("Login info =>>"
+            + "DATE:"
+            + DateTime.UtcNow.ToLongTimeString()
+            + "UserEmail:"
+            + request.Email);
         _logger.LogInformation("login page visited at {0} by user :{1}",
             DateTime.UtcNow.ToLongTimeString(), request.Email);
 
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+        User user = _userService.GetUserByEmailAsync(request.Email);
         if (user == null)
         {
             return BadRequest("User not found.");
@@ -68,9 +81,24 @@ public class AuthController : ControllerBase
 
 
         //return Ok($"Welcome back, {user.Email}! :)");
-        return Ok(new { Token = token, User = user });
+        return Ok(new { Token = token, Role = user.Role });
     }
 
+    [HttpPost("CheckTokenValidity")]
+    public ActionResult<string> CheckTokenValidity(string token)
+    {
+        if (token == null) { return BadRequest("null value"); }
+        _authService.IsTokenValid(token);
+        return Ok("TOKEN is VALID!");
+    }
+
+    [HttpPost("GetClaim")]
+    public ActionResult<IEnumerable<Claim>> GetClaim(string claimName)
+    {
+        if (claimName == null) { throw new ArgumentNullException(nameof(claimName)); }
+        var tokenClaim = _authService.GetTokenClaims(claimName).ToList();
+        return Ok(tokenClaim);
+    }
 
 
     private string CreateToken(User user)

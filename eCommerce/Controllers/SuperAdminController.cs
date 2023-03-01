@@ -5,8 +5,6 @@ using eCommerce.Models.UserDto;
 using eCommerce.Services;
 using Microsoft.AspNetCore.Mvc;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace eCommerce.Controllers
 {
     [Route("api/[controller]")]
@@ -16,30 +14,26 @@ namespace eCommerce.Controllers
         public IUserService _userService { get; }
         public ecommerceContext _context { get; }
 
-        public SuperAdminController(IUserService userService, ecommerceContext context, IConfiguration configuration)
+        public SuperAdminController(IUserService userService, ecommerceContext context)
         {
             _userService = userService;
             _context = context;
         }
         // GET: api/<SuperAdminController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<IEnumerable<User>> GetAsync()
         {
-            return new string[] { "value1", "value2" };
+            return (IEnumerable<User>)await _userService.GetAllUsers();
         }
 
         // GET api/<SuperAdminController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<User> GetAsync(Guid id)
         {
-            return "value";
+            return (User)await _userService.GetUserById(id);
         }
 
-        // POST api/<SuperAdminController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
+
 
         // PUT api/<SuperAdminController>/5
         [HttpPut("{id}")]

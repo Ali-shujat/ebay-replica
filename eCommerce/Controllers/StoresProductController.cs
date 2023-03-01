@@ -4,7 +4,6 @@ using eCommerce.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 
 namespace eCommerce.Controllers
 {
@@ -15,13 +14,12 @@ namespace eCommerce.Controllers
     {
         private readonly ecommerceContext _context;
         private IStoreService _storeService;
-        private readonly IJWTAuthService _authService;
 
-        public StoresProductController(ecommerceContext context, IStoreService storeService, IJWTAuthService authService)
+        public StoresProductController(ecommerceContext context, IStoreService storeService)
         {
             _context = context;
             _storeService = storeService;
-            _authService = authService;
+
         }
 
         [HttpGet("{email}"), Authorize(Roles = "admin")]
@@ -49,10 +47,8 @@ namespace eCommerce.Controllers
         [HttpPost, Authorize(Roles = "super-admin")]
         public async Task<ActionResult<Store>> PostStore(string storeName)
         {
-            //_context.Stores.Add(store);
             try
             {
-                // await _context.SaveChangesAsync();
                 await _storeService.CreateStoreAsync(storeName);
             }
             catch (DbUpdateException)
@@ -69,20 +65,6 @@ namespace eCommerce.Controllers
             return CreatedAtAction("GetStore", new { id = storeName }, storeName);
         }
 
-        [HttpPost("CheckTokenValidity")]
-        public ActionResult<string> CheckTokenValidity(string token)
-        {
-            if (token == null) { return BadRequest("null value"); }
-            _authService.IsTokenValid(token); return Ok("TOKEN is VALID!");
-        }
-
-        [HttpPost("GetClaim")]
-        public ActionResult<IEnumerable<Claim>> GetClaim(string claimName)
-        {
-            if (claimName == null) { throw new ArgumentNullException(nameof(claimName)); }
-            var tokenClaim = _authService.GetTokenClaims(claimName).ToList();
-            return Ok(tokenClaim);
-        }
 
         private bool StoreExists(string name)
         {
