@@ -10,8 +10,8 @@ namespace eCommerce.Services
         public static string CreateEmail(string email, string tocken)
         {
 
-            string from = "the.shujat@hotmail.com"; // Replace with your own email address
-            string password = "Obliviate1"; // Replace with your own email password   
+            string from = ""; // Replace with your own email address
+            string password = ""; // Replace with your own email password   
             MailMessage message = new MailMessage(from, email);
 
             string mailbody = tocken;
