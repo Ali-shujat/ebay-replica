@@ -48,10 +48,10 @@ namespace eCommerce.Controllers
 
             };
             var config = _configuration["Yahoo:Password"];
-            //send email method
-            SendEmail.SkickaEmail(request.Email, config, user.VerificationToken);
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
+            //send email method
+            SendEmail.SkickaEmail(request.Email, config, user.VerificationToken);
 
             return Ok("User successfully created! \n Please check your email!");
         }

@@ -8,7 +8,7 @@ public interface IUserService
     Task<IEnumerable<User>> GetAllUsers();
     Task<User> GetUserById(Guid userId);
     Task DeleteUser(Guid userId);
-    Task CreateUser(UserRegisterRequest request);
+    Task<bool> CreateUser(UserRegisterRequest request);
     Task UpdateUser(User user);
     User GetUserByEmailAsync(string email);
 }

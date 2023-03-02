@@ -34,7 +34,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register")]
-    public ActionResult<User> Register(UserRegisterRequest request)
+    public async Task<ActionResult<User>> RegisterAsync(UserRegisterRequest request)
     {
         LoggingService.Log("Register info =>> " +
             "DATE:" + DateTime.UtcNow.ToLongTimeString() +
@@ -42,17 +42,16 @@ public class AuthController : ControllerBase
 
         _logger.LogInformation("Register page visited at {0} by user {1}",
             DateTime.UtcNow.ToLongTimeString(), request.Name);
-        _userService.CreateUser(request);
-
-        return Ok("User successfully created! \n Please check your email!");
+        var result = await _userService.CreateUser(request);
+        if (result)
+        { return Ok("User successfully created! \n Please check your email!"); }
+        return BadRequest("User already exists");
     }
-
-
 
     [HttpPost("login")]
     public IActionResult Login(UserLoginRequest request)
     {
-        LoggingService.Log("Login info =>>"
+        LoggingService.Log("Login info =>> "
             + "DATE:"
             + DateTime.UtcNow.ToLongTimeString()
             + "UserEmail:"

@@ -18,6 +18,7 @@ public partial class ecommerceContext : DbContext
     public virtual DbSet<Product> Products { get; set; } = null!;
     public virtual DbSet<Store> Stores { get; set; } = null!;
     public virtual DbSet<User> Users { get; set; } = null!;
+    public DbSet<CartItem> ShoppingCartItems { get; set; } = null!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

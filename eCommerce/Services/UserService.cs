@@ -16,11 +16,11 @@ namespace eCommerce.Services
             _configuration = configuration;
         }
 
-        public Task CreateUser(UserRegisterRequest request)
+        public async Task<bool> CreateUser(UserRegisterRequest request)
         {
             if (_context.Users.Any(u => u.Email == request.Email))
             {
-                return Task.FromResult("User already exists.");
+                return false;
             }
 
             HashTokenService.CreatePasswordHash(request.Password,
@@ -38,11 +38,19 @@ namespace eCommerce.Services
 
             };
             var config = _configuration["Yahoo:Password"];
-            //send email method
-            SendEmail.SkickaEmail(request.Email, config, user.VerificationToken);
-            _context.Users.Add(user);
-            _context.SaveChangesAsync();
-            return Task.CompletedTask;
+            try
+            {
+                //send email method
+                SendEmail.SkickaEmail(request.Email, config, user.VerificationToken);
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         public Task DeleteUser(Guid userId)
