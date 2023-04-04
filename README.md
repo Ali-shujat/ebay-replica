@@ -8,23 +8,28 @@ This project is a .NET solution for Online Shop.
 ### Getting Started
 The app should be able to display products. There should be a filter bar and search for products. Each product should have its own page, where you can add products to your cart. This cart should persist in local storage, and only be visible if that user is logged in
 The backend should log each request from the clients in a document of your choice. Look up “backend logging”, if you need to know more. The log should include; type of request, date, status code
+
 The store and the backend should not be open to just anyone. Only an authenticated user (of any three roles) should be able to reach the store and its backend routes (using something called “protected routes”). It is important that this authentication is present in both your frontend and backend
+
 The app should have three different roles; 
--Super Admin, 
--Store Admin and 
--User. 
-'Super Admin: 
+- Super Admin, 
+* Store Admin and 
++ User. 
+
+**Super Admin**
 This is the owner of the website. 
 They can view all the different stores and their products
 Super Admin can also delete products and entire Stores
-This user can’t be created in the sign-up page. You create this beforehand
-'Store Admin:
+This user can’t be created in the sign-up page. You create this beforehand.
+
+**Store Admin**
 This is the owner of the store. 
-These are able to upload and remove new products. With both info and a fitting image
-'User: 
+These are able to upload and remove new products. With both info and a fitting image.
+
+**User**
 This is the customer. 
 A user can add products to their cart
-Save their cart in local storage, and have that only visible by them
+Save their cart in local storage, and have that only visible by them.
 
 
 ### Prerequisites
@@ -49,8 +54,8 @@ A step-by-step series of instructions that tell you how to get a development env
  
 ```
 ### Models
-´´´
-User
+
+- User
 {
   id: '',
   email: '',
@@ -58,14 +63,13 @@ User
   role: ['admin', 'super-admin', 'user'],
   storeId: '',
 }
-
-Store
+* Store
 {
   id: '',
   name: '',
   adminId: ''
 }
-Product
++ Product
 {
   id: '',
   title: '',
@@ -76,7 +80,7 @@ Product
   quantity: ,
  category: ,
 }
-´´´
+
 
 ### Built With
 - [ ] Technology1 - The .Net framework used
