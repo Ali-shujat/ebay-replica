@@ -49,7 +49,7 @@ A step-by-step series of instructions that tell you how to get a development env
  
 ```
 ### Models
-	<sub>
+´´´
 User
 {
   id: '',
@@ -76,7 +76,7 @@ Product
   quantity: ,
  category: ,
 }
-</sub>
+´´´
 
 ### Built With
 - [ ] Technology1 - The .Net framework used
